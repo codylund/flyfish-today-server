@@ -2,13 +2,13 @@ package middleware
 
 import (
     "context"
-    "log"
-    "net/http"
     "github.com/codylund/streamflows-server/db"
     "github.com/codylund/streamflows-server/domain"
     "github.com/gin-gonic/gin"
-    "go.mongodb.org/mongo-driver/mongo"
     "go.mongodb.org/mongo-driver/bson"
+    "go.mongodb.org/mongo-driver/mongo"
+    "log"
+    "net/http"
 )
 
 func Session(c *gin.Context) {
