@@ -7,7 +7,6 @@ import (
     "github.com/gin-gonic/gin"
     "go.mongodb.org/mongo-driver/bson"
     "go.mongodb.org/mongo-driver/mongo"
-    "log"
     "net/http"
 )
 
@@ -15,12 +14,9 @@ func Session(c *gin.Context) {
     sessionId, err := c.Cookie("session")
 
     if err != nil {
-        log.Println(err)
-        c.AbortWithStatus(http.StatusUnauthorized)
+        c.AbortWithError(http.StatusUnauthorized, err)
         return
     }
-
-    log.Println("SessionID: %s", sessionId)
 
     db.Run(func (db *mongo.Database) {
         coll := db.Collection("Sessions")

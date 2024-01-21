@@ -15,7 +15,9 @@ func main() {
 
     authenticatedGroup := router.Group("/v1")
     authenticatedGroup.Use(middleware.Session)
-    authenticatedGroup.GET("/sites", handler.GetSites)
+    authenticatedGroup.GET("/sites/get", handler.GetSites)
+    authenticatedGroup.POST("/sites/add", handler.AddSites)
+    authenticatedGroup.DELETE("/sites/:id", handler.RemoveSite)
 
     router.Run("localhost:8080")
 }

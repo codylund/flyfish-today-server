@@ -2,9 +2,10 @@ package handler
 
 import (
 	"context"
+    "errors"
+    "fmt"
     "github.com/codylund/streamflows-server/auth"
     "github.com/codylund/streamflows-server/db"
-    "github.com/codylund/streamflows-server/domain"
     "github.com/gin-gonic/gin"
     "go.mongodb.org/mongo-driver/bson"
     "go.mongodb.org/mongo-driver/mongo"
@@ -12,11 +13,9 @@ import (
 )
 
 func RegisterUser(c *gin.Context) {
-    // Parse user information from request body.
-    var reqBody domain.User
-    err := c.Bind(&reqBody)
+    user, err := GetUser(c)
     if err != nil {
-        c.Status(http.StatusBadRequest)
+        Error(c, http.StatusBadRequest, err)
         return
     }
 
@@ -24,20 +23,25 @@ func RegisterUser(c *gin.Context) {
         coll := db.Collection("Users")
         
         // Verify no existing user with same username.
-        count, err := coll.CountDocuments(context.TODO(), bson.M{"username": reqBody.Username})
-        if err != nil || count > 0 {
-            c.Status(http.StatusBadRequest)
+        count, err := coll.CountDocuments(context.TODO(), bson.M{"username": user.Username})
+        if err != nil {
+            Error(c, http.StatusInternalServerError, err)
+            return
+        }
+        if count > 0 {
+            msg := fmt.Sprintf("An account with username %s already exists.", user.Username)
+            Error(c, http.StatusBadRequest, errors.New(msg))
             return
         }
 
-        // Create new user.
-        reqBody.Password, _ = auth.HashPassword(reqBody.Password)
-        _, createUserErr := coll.InsertOne(context.TODO(), reqBody)
+        // Create new user with hashed password.
+        user.Password, _ = auth.HashPassword(user.Password)
+        _, createUserErr := coll.InsertOne(context.TODO(), user)
         if createUserErr != nil {
-            c.Status(http.StatusBadRequest)
+            Error(c, http.StatusInternalServerError, createUserErr)
             return
         }
-
+        
         c.Status(http.StatusOK)	
     })
 }

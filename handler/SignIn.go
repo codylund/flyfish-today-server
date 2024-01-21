@@ -2,6 +2,7 @@ package handler
 
 import (
 	"context"
+	"errors"
     "github.com/codylund/streamflows-server/auth"
     "github.com/codylund/streamflows-server/db"
     "github.com/codylund/streamflows-server/domain"
@@ -13,11 +14,9 @@ import (
 )
 
 func SignIn(c *gin.Context) {
-    // Parse user information from request body.
-    var reqBody domain.User
-    err := c.Bind(&reqBody)
+    userRequest, err := GetUser(c)
     if err != nil {
-        c.Status(http.StatusBadRequest)
+        Error(c, http.StatusBadRequest, err)
         return
     }
 
@@ -25,39 +24,41 @@ func SignIn(c *gin.Context) {
         usersColl := db.Collection("Users")
         
         // Lookup by username.
-        result := usersColl.FindOne(context.TODO(), bson.M{"username": reqBody.Username})
+        result := usersColl.FindOne(context.TODO(), bson.M{"username": userRequest.Username})
 
         // Decode password hash from DB.
         var user domain.User
-        decodeUserErr := result.Decode(&user)
-        if decodeUserErr != nil {
-            c.Status(http.StatusBadRequest)
+        err = result.Decode(&user)
+        if err != nil {
+			Error(c, http.StatusInternalServerError, err)
             return
         }
         
         // Verify password hash.
-        if !auth.CheckPasswordHash(reqBody.Password, user.Password) {
-            c.Status(http.StatusUnauthorized)
+        if !auth.CheckPasswordHash(userRequest.Password, user.Password) {
+			Error(c, http.StatusUnauthorized, errors.New(user.Password))
             return
         }
 
         // Password matched! Decode user ID from DB.
         var userID domain.UserID
-        decodeUserIDErr := result.Decode(&user)
-        if decodeUserIDErr != nil {
-            c.Status(http.StatusBadRequest)
+        err = result.Decode(&userID)
+        if err != nil {
+            Error(c, http.StatusInternalServerError, err)
             return
         }
 
-        // Create a new session.
-        sessionsColl := db.Collection("Users")
-        sessionID := uuid.New().String()
-        _, createSessionErr := sessionsColl.InsertOne(context.TODO(), domain.Session{UserID: userID.ID, SessionID: sessionID})
-        if createSessionErr != nil {
-            c.Status(http.StatusBadRequest)
+        // Create a new session and link to user ID.
+        sessionsColl := db.Collection("Sessions")
+		sessionID := uuid.New().String()
+		session := domain.Session{UserID: userID.ID, SessionID: sessionID}
+        _, err = sessionsColl.InsertOne(context.TODO(), session)
+        if err != nil {
+            Error(c, http.StatusInternalServerError, err)
             return
         }
 
+		// Return secure cookie for the session.
         c.SetCookie("session", sessionID, 180*24*60*60, "/", "localhost", true, true)
         c.Status(http.StatusOK)	
     })
