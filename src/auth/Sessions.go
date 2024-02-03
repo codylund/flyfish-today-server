@@ -8,6 +8,7 @@ import (
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
 	"net/http"
+	"os"
 )
 
 func Error(c *gin.Context, status int, err error) {
@@ -27,6 +28,6 @@ func NewSession(c *gin.Context, db *mongo.Database, userID primitive.ObjectID) e
 
 	// Return secure cookie for the session.
 	c.SetSameSite(http.SameSiteNoneMode)
-	c.SetCookie("session", sessionID, 180*24*60*60, "/", "localhost", true, true)
+	c.SetCookie("session", sessionID, 180*24*60*60, "/", os.Getenv("SERVER_ADDRESS"), true, true)
 	return nil
 }

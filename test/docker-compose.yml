@@ -2,6 +2,7 @@
 version: '3.1'
 
 services:
+  # Local server instance
   server:
     image: golang
     restart: always
@@ -14,9 +15,10 @@ services:
     command: go run .
     environment:
       SERVER_ADDRESS: 0.0.0.0:8080
-      ORIGIN_URL: http://0.0.0.0:3000
+      ORIGIN_URL: http://localhost:3000
       MONGODB_URL: mongodb://root:example@mongo:27017/
 
+  # Local Mongo DB instance
   mongo:
     image: mongo
     restart: always
@@ -28,6 +30,7 @@ services:
     volumes:
       - ./mongo-init.js:/docker-entrypoint-initdb.d/mongo-init.js:ro
 
+  # Local Mongo Express instance
   mongo-express:
     image: mongo-express
     restart: always

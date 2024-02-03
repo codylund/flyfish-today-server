@@ -1,6 +1,7 @@
 package main
 
 import (
+    "flag"
     "github.com/codylund/streamflows-server/handler"
     "github.com/codylund/streamflows-server/middleware"
     "github.com/gin-contrib/cors"
@@ -12,7 +13,7 @@ func main() {
     router := gin.Default()
 
     config := cors.DefaultConfig()
-    config.AllowOrigins = []string{"http://0.0.0.0:3000"}
+    config.AllowOrigins = []string{os.Getenv("ORIGIN_URL")}
     config.AllowCredentials = true
     router.Use(cors.New(config))
 
