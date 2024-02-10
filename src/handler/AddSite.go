@@ -2,13 +2,14 @@ package handler
 
 import (
 	"context"
-    "errors"
-    "github.com/codylund/streamflows-server/db"
-    "github.com/codylund/streamflows-server/domain"
-    "github.com/gin-gonic/gin"
-    "go.mongodb.org/mongo-driver/bson/primitive"
-    "go.mongodb.org/mongo-driver/mongo"
-    "net/http"
+	"errors"
+	"net/http"
+
+	"github.com/codylund/streamflows-server/db"
+	"github.com/codylund/streamflows-server/domain"
+	"github.com/gin-gonic/gin"
+	"go.mongodb.org/mongo-driver/bson/primitive"
+	"go.mongodb.org/mongo-driver/mongo"
 )
 
 func AddSite(c *gin.Context) {
@@ -22,27 +23,28 @@ func AddSite(c *gin.Context) {
 
 	// Parse sites from request body.
 	var site domain.Site
-    err := c.BindJSON(&site)
-    if err != nil {
-        Error(c, http.StatusBadRequest, errors.New("Invalid JSON for new sites."))
+	err := c.BindJSON(&site)
+	if err != nil {
+		Error(c, http.StatusBadRequest, errors.New("Invalid JSON for new sites."))
 		return
-    }
+	}
 	// Add the parsed user id to each site.
 	site.UserID = userID.(primitive.ObjectID)
 
 	// TODO verify the sites
 
 	// Insert all the sites.
-    db.Run(func (db *mongo.Database) {
-        coll := db.Collection("Sites")
+	db.Run(func(db *mongo.Database) {
+		coll := db.Collection("Sites")
 
 		// Insert sites.
-        _, insertSiteErr := coll.InsertOne(context.TODO(), site)
-        if insertSiteErr != nil {
-            Error(c, http.StatusInternalServerError, insertSiteErr)
-            return
-        }
-        
-        c.Status(http.StatusOK)	
-    })
+		insertResult, insertSiteErr := coll.InsertOne(context.TODO(), site)
+		if insertSiteErr != nil {
+			Error(c, http.StatusInternalServerError, insertSiteErr)
+			return
+		}
+
+		site.ObjectID = insertResult.InsertedID.(primitive.ObjectID)
+		c.IndentedJSON(http.StatusOK, site)
+	})
 }

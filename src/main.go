@@ -1,7 +1,6 @@
 package main
 
 import (
-    "flag"
     "github.com/codylund/streamflows-server/handler"
     "github.com/codylund/streamflows-server/middleware"
     "github.com/gin-contrib/cors"
@@ -24,9 +23,10 @@ func main() {
     authenticatedGroup := router.Group("/v1")
     authenticatedGroup.Use(middleware.Session)
     authenticatedGroup.GET("/me", handler.Me)
-    authenticatedGroup.GET("/sites/get", handler.GetSites)
+    authenticatedGroup.GET("/sites", handler.GetSites)
     authenticatedGroup.POST("/signout", handler.SignOut)
     authenticatedGroup.POST("/sites/add", handler.AddSite)
+    authenticatedGroup.PATCH("/sites/:id", handler.UpdateSite)
     authenticatedGroup.DELETE("/sites/:id", handler.RemoveSite)
 
     router.Run(os.Getenv("SERVER_ADDRESS"))

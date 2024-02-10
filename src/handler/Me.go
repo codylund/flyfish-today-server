@@ -3,12 +3,13 @@ package handler
 import (
 	"context"
 	"errors"
-    "github.com/codylund/streamflows-server/db"
-    "github.com/codylund/streamflows-server/domain"
-    "github.com/gin-gonic/gin"
-	"go.mongodb.org/mongo-driver/bson"
-    "go.mongodb.org/mongo-driver/mongo"
 	"net/http"
+
+	"github.com/codylund/streamflows-server/db"
+	"github.com/codylund/streamflows-server/domain"
+	"github.com/gin-gonic/gin"
+	"go.mongodb.org/mongo-driver/bson"
+	"go.mongodb.org/mongo-driver/mongo"
 )
 
 func Me(c *gin.Context) {
@@ -20,20 +21,20 @@ func Me(c *gin.Context) {
 		return
 	}
 
-    db.Run(func (db *mongo.Database) {
-        usersColl := db.Collection("Users")
-        
-        // Lookup by username.
-        result := usersColl.FindOne(context.TODO(), bson.M{"_id": userID})
+	db.Run(func(db *mongo.Database) {
+		usersColl := db.Collection("Users")
 
-        // Decode password hash from DB.
-        var profile domain.Profile
-        err := result.Decode(&profile)
-        if err != nil {
+		// Lookup by username.
+		result := usersColl.FindOne(context.TODO(), bson.M{"_id": userID})
+
+		// Decode password hash from DB.
+		var profile domain.Profile
+		err := result.Decode(&profile)
+		if err != nil {
 			Error(c, http.StatusInternalServerError, err)
-            return
-        }
-        
-        c.IndentedJSON(http.StatusOK, profile)
-    })
+			return
+		}
+
+		c.IndentedJSON(http.StatusOK, profile)
+	})
 }

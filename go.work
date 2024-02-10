@@ -1,0 +1,35 @@
+go 1.21.6
+
+use (
+	./src
+	./src/auth
+	./src/db
+	./src/domain
+	./src/handler
+	./src/middleware
+	./test/go-modules/github.com/gabriel-vasile/mimetype@v1.4.2
+	./test/go-modules/github.com/gin-contrib/cors@v1.5.0
+	./test/go-modules/github.com/gin-contrib/sse@v0.1.0
+	./test/go-modules/github.com/gin-gonic/gin@v1.9.1
+	./test/go-modules/github.com/go-playground/locales@v0.14.1
+	./test/go-modules/github.com/go-playground/universal-translator@v0.18.1
+	./test/go-modules/github.com/go-playground/validator/v10@v10.15.5
+	./test/go-modules/github.com/golang/snappy@v0.0.1
+	./test/go-modules/github.com/google/uuid@v1.5.0
+	./test/go-modules/github.com/klauspost/compress@v1.13.6
+	./test/go-modules/github.com/leodido/go-urn@v1.2.4
+	./test/go-modules/github.com/mattn/go-isatty@v0.0.19
+	./test/go-modules/github.com/pelletier/go-toml/v2@v2.1.0
+	./test/go-modules/github.com/ugorji/go/codec@v1.2.11
+	./test/go-modules/github.com/xdg-go/pbkdf2@v1.0.0
+	./test/go-modules/github.com/xdg-go/scram@v1.1.2
+	./test/go-modules/github.com/xdg-go/stringprep@v1.0.4
+	./test/go-modules/go.mongodb.org/mongo-driver@v1.13.1
+	./test/go-modules/golang.org/x/crypto@v0.14.0
+	./test/go-modules/golang.org/x/net@v0.16.0
+	./test/go-modules/golang.org/x/sync@v0.0.0-20220722155255-886fb9371eb4
+	./test/go-modules/golang.org/x/sys@v0.13.0
+	./test/go-modules/golang.org/x/text@v0.13.0
+	./test/go-modules/google.golang.org/protobuf@v1.31.0
+	./test/go-modules/gopkg.in/yaml.v3@v3.0.1
+)

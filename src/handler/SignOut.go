@@ -1,7 +1,7 @@
 package handler
 
 import (
-    "github.com/gin-gonic/gin"
+  "github.com/gin-gonic/gin"
 	"net/http"
 )
 
