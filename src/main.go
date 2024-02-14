@@ -1,33 +1,36 @@
 package main
 
 import (
-    "github.com/codylund/streamflows-server/handler"
-    "github.com/codylund/streamflows-server/middleware"
-    "github.com/gin-contrib/cors"
-    "github.com/gin-gonic/gin"
-    "os"
+	"os"
+
+	"github.com/codylund/streamflows-server/handler"
+	"github.com/codylund/streamflows-server/middleware"
+	"github.com/gin-contrib/cors"
+	"github.com/gin-gonic/gin"
 )
 
 func main() {
-    router := gin.Default()
+	router := gin.Default()
 
-    config := cors.DefaultConfig()
-    config.AllowOrigins = []string{os.Getenv("ORIGIN_URL")}
-    config.AllowCredentials = true
-    router.Use(cors.New(config))
+	config := cors.DefaultConfig()
+	origin := os.Getenv("ORIGIN_URL")
+	println("Allowing origin: ", origin)
+	config.AllowOrigins = []string{origin}
+	config.AllowCredentials = true
+	router.Use(cors.New(config))
 
-    unauthenticatedGroup := router.Group("/v1")
-    unauthenticatedGroup.POST("/register", handler.RegisterUser)
-    unauthenticatedGroup.POST("/signin", handler.SignIn)
+	unauthenticatedApiGroup := router.Group("/v1")
+	unauthenticatedApiGroup.POST("/register", handler.RegisterUser)
+	unauthenticatedApiGroup.POST("/signin", handler.SignIn)
 
-    authenticatedGroup := router.Group("/v1")
-    authenticatedGroup.Use(middleware.Session)
-    authenticatedGroup.GET("/me", handler.Me)
-    authenticatedGroup.GET("/sites", handler.GetSites)
-    authenticatedGroup.POST("/signout", handler.SignOut)
-    authenticatedGroup.POST("/sites/add", handler.AddSite)
-    authenticatedGroup.PATCH("/sites/:id", handler.UpdateSite)
-    authenticatedGroup.DELETE("/sites/:id", handler.RemoveSite)
+	authenticatedApiGroup := router.Group("/v1")
+	authenticatedApiGroup.Use(middleware.Session)
+	authenticatedApiGroup.GET("/me", handler.Me)
+	authenticatedApiGroup.GET("/sites", handler.GetSites)
+	authenticatedApiGroup.POST("/signout", handler.SignOut)
+	authenticatedApiGroup.POST("/sites/add", handler.AddSite)
+	authenticatedApiGroup.PATCH("/sites/:id", handler.UpdateSite)
+	authenticatedApiGroup.DELETE("/sites/:id", handler.RemoveSite)
 
-    router.Run(os.Getenv("SERVER_ADDRESS"))
+	router.Run("0.0.0.0:" + os.Getenv("PORT"))
 }

@@ -10,11 +10,13 @@ services:
     ports:
       - 8080:8080
     volumes:
+      - /Users/cody/my-app/build:/client:ro
       - ../src/:/server:ro
-      - ./go-modules:/go/pkg/mod
+      - ../go-modules:/go/pkg/mod
     command: go run .
     environment:
-      SERVER_ADDRESS: 0.0.0.0:8080
+      PORT: 8080
+      DOMAIN: localhost
       ORIGIN_URL: http://localhost:3000
       MONGODB_URL: mongodb://root:example@mongo:27017/
 
