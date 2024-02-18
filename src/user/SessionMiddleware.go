@@ -1,17 +1,16 @@
-package middleware
+package user
 
 import (
 	"context"
 	"net/http"
 
 	"github.com/codylund/streamflows-server/db"
-	"github.com/codylund/streamflows-server/domain"
 	"github.com/gin-gonic/gin"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
 )
 
-func Session(c *gin.Context) {
+func SessionMiddleware(c *gin.Context) {
 	sessionId, err := c.Cookie("session")
 
 	if err != nil {
@@ -24,7 +23,7 @@ func Session(c *gin.Context) {
 
 		filter := bson.M{"session_id": sessionId}
 
-		var result domain.Session
+		var result Session
 		err := coll.FindOne(context.TODO(), filter).Decode(&result)
 		if err != nil {
 			//log.Info("Failed to find site collection for user %s: %s", id, err)

@@ -1,4 +1,4 @@
-package handler
+package sites
 
 import (
 	"context"
@@ -6,7 +6,7 @@ import (
 	"net/http"
 
 	"github.com/codylund/streamflows-server/db"
-	"github.com/codylund/streamflows-server/domain"
+	"github.com/codylund/streamflows-server/util"
 	"github.com/gin-gonic/gin"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
@@ -17,15 +17,15 @@ func AddSite(c *gin.Context) {
 	// This is set by middleware.Sessions.
 	userID, exists := c.Get("user_id")
 	if !exists {
-		Error(c, http.StatusInternalServerError, errors.New("Context missing user id."))
+		util.Error(c, http.StatusInternalServerError, errors.New("Context missing user id."))
 		return
 	}
 
 	// Parse sites from request body.
-	var site domain.Site
+	var site Site
 	err := c.BindJSON(&site)
 	if err != nil {
-		Error(c, http.StatusBadRequest, errors.New("Invalid JSON for new sites."))
+		util.Error(c, http.StatusBadRequest, errors.New("Invalid JSON for new sites."))
 		return
 	}
 	// Add the parsed user id to each site.
@@ -40,7 +40,7 @@ func AddSite(c *gin.Context) {
 		// Insert sites.
 		insertResult, insertSiteErr := coll.InsertOne(context.TODO(), site)
 		if insertSiteErr != nil {
-			Error(c, http.StatusInternalServerError, insertSiteErr)
+			util.Error(c, http.StatusInternalServerError, insertSiteErr)
 			return
 		}
 

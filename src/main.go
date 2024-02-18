@@ -3,8 +3,8 @@ package main
 import (
 	"os"
 
-	"github.com/codylund/streamflows-server/handler"
-	"github.com/codylund/streamflows-server/middleware"
+	"github.com/codylund/streamflows-server/sites"
+	"github.com/codylund/streamflows-server/user"
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 )
@@ -20,17 +20,19 @@ func main() {
 	router.Use(cors.New(config))
 
 	unauthenticatedApiGroup := router.Group("/v1")
-	unauthenticatedApiGroup.POST("/register", handler.RegisterUser)
-	unauthenticatedApiGroup.POST("/signin", handler.SignIn)
+	unauthenticatedApiGroup.POST("/register", user.RegisterUser)
+	unauthenticatedApiGroup.POST("/signin", user.SignIn)
 
 	authenticatedApiGroup := router.Group("/v1")
-	authenticatedApiGroup.Use(middleware.Session)
-	authenticatedApiGroup.GET("/me", handler.Me)
-	authenticatedApiGroup.GET("/sites", handler.GetSites)
-	authenticatedApiGroup.POST("/signout", handler.SignOut)
-	authenticatedApiGroup.POST("/sites/add", handler.AddSite)
-	authenticatedApiGroup.PATCH("/sites/:id", handler.UpdateSite)
-	authenticatedApiGroup.DELETE("/sites/:id", handler.RemoveSite)
+	authenticatedApiGroup.Use(user.SessionMiddleware)
+
+	authenticatedApiGroup.GET("/me", user.Me)
+	authenticatedApiGroup.POST("/signout", user.SignOut)
+
+	authenticatedApiGroup.GET("/sites", sites.GetSites)
+	authenticatedApiGroup.POST("/sites/add", sites.AddSite)
+	authenticatedApiGroup.PATCH("/sites/:id", sites.UpdateSite)
+	authenticatedApiGroup.DELETE("/sites/:id", sites.RemoveSite)
 
 	router.Run("0.0.0.0:" + os.Getenv("PORT"))
 }

@@ -1,4 +1,4 @@
-package domain
+package user
 
 type Profile struct {
 	Username    string `json:"username"     bson:"username"`

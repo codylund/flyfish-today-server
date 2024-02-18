@@ -1,4 +1,4 @@
-package handler
+package sites
 
 import (
 	"context"
@@ -6,7 +6,7 @@ import (
 	"net/http"
 
 	"github.com/codylund/streamflows-server/db"
-	"github.com/codylund/streamflows-server/domain"
+	"github.com/codylund/streamflows-server/util"
 	"github.com/gin-gonic/gin"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
@@ -18,22 +18,22 @@ func UpdateSite(c *gin.Context) {
 	// This is set by middleware.Sessions.
 	userID, exists := c.Get("user_id")
 	if !exists {
-		Error(c, http.StatusInternalServerError, errors.New("Context missing user id."))
+		util.Error(c, http.StatusInternalServerError, errors.New("Context missing user id."))
 		return
 	}
 
 	siteID, siteIDError := primitive.ObjectIDFromHex(c.Param("id"))
 	if siteIDError != nil {
-		Error(c, http.StatusBadRequest, siteIDError)
+		util.Error(c, http.StatusBadRequest, siteIDError)
 		return
 	}
 
 	filter := bson.M{"_id": siteID, "user_id": userID}
 
-	var siteUpdate domain.SiteUpdate
+	var siteUpdate SiteUpdate
 	bindJsonErr := c.BindJSON(&siteUpdate)
 	if bindJsonErr != nil {
-		Error(c, http.StatusBadRequest, bindJsonErr)
+		util.Error(c, http.StatusBadRequest, bindJsonErr)
 		return
 	}
 
@@ -43,7 +43,7 @@ func UpdateSite(c *gin.Context) {
 	// 	return
 	// }
 
-	update := bson.D{{"$set", siteUpdate}}
+	update := bson.D{{Key: "$set", Value: siteUpdate}}
 
 	db.Run(func(db *mongo.Database) {
 		coll := db.Collection("Sites")
@@ -51,7 +51,7 @@ func UpdateSite(c *gin.Context) {
 		// Look up site collection for the current user.
 		_, err := coll.UpdateOne(context.TODO(), filter, update)
 		if err != nil {
-			Error(c, http.StatusInternalServerError, err)
+			util.Error(c, http.StatusInternalServerError, err)
 			return
 		}
 

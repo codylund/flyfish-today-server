@@ -1,12 +1,6 @@
 go 1.21.6
 
 use (
-	./src
-	./src/auth
-	./src/db
-	./src/domain
-	./src/handler
-	./src/middleware
 	./go-modules/github.com/gabriel-vasile/mimetype@v1.4.2
 	./go-modules/github.com/gin-contrib/cors@v1.5.0
 	./go-modules/github.com/gin-contrib/sse@v0.1.0
@@ -32,4 +26,9 @@ use (
 	./go-modules/golang.org/x/text@v0.13.0
 	./go-modules/google.golang.org/protobuf@v1.31.0
 	./go-modules/gopkg.in/yaml.v3@v3.0.1
+	./src
+	./src/db
+	./src/sites
+	./src/user
+	./src/util
 )

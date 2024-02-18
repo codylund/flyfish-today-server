@@ -3,8 +3,8 @@ module github.com/codylund/streamflows-server
 go 1.21.6
 
 require (
-	github.com/codylund/streamflows-server/handler v0.0.0-00010101000000-000000000000
-	github.com/codylund/streamflows-server/middleware v0.0.0-00010101000000-000000000000
+	github.com/codylund/streamflows-server/sites v0.0.0-00010101000000-000000000000
+	github.com/codylund/streamflows-server/user v0.0.0-00010101000000-000000000000
 	github.com/gin-contrib/cors v1.5.0
 	github.com/gin-gonic/gin v1.9.1
 )
@@ -13,18 +13,16 @@ require (
 	github.com/bytedance/sonic v1.10.2 // indirect
 	github.com/chenzhuoyu/base64x v0.0.0-20230717121745-296ad89f973d // indirect
 	github.com/chenzhuoyu/iasm v0.9.1 // indirect
-	github.com/codylund/streamflows-server/auth v0.0.0-00010101000000-000000000000 // indirect
 	github.com/codylund/streamflows-server/db v0.0.0-00010101000000-000000000000 // indirect
-	github.com/codylund/streamflows-server/domain v0.0.0-00010101000000-000000000000 // indirect
+	github.com/codylund/streamflows-server/util v0.0.0-00010101000000-000000000000 // indirect
 	github.com/gabriel-vasile/mimetype v1.4.3 // indirect
 	github.com/gin-contrib/sse v0.1.0 // indirect
-	github.com/gin-gonic/contrib v0.0.0-20221130124618-7e01895a63f2 // indirect
 	github.com/go-playground/locales v0.14.1 // indirect
 	github.com/go-playground/universal-translator v0.18.1 // indirect
 	github.com/go-playground/validator/v10 v10.17.0 // indirect
 	github.com/goccy/go-json v0.10.2 // indirect
 	github.com/golang/snappy v0.0.1 // indirect
-	github.com/google/uuid v1.5.0 // indirect
+	github.com/google/uuid v1.6.0 // indirect
 	github.com/json-iterator/go v1.1.12 // indirect
 	github.com/klauspost/compress v1.13.6 // indirect
 	github.com/klauspost/cpuid/v2 v2.2.6 // indirect
@@ -41,23 +39,21 @@ require (
 	github.com/xdg-go/scram v1.1.2 // indirect
 	github.com/xdg-go/stringprep v1.0.4 // indirect
 	github.com/youmark/pkcs8 v0.0.0-20181117223130-1be2e3e5546d // indirect
-	go.mongodb.org/mongo-driver v1.13.1 // indirect
+	go.mongodb.org/mongo-driver v1.14.0 // indirect
 	golang.org/x/arch v0.7.0 // indirect
 	golang.org/x/crypto v0.19.0 // indirect
 	golang.org/x/net v0.21.0 // indirect
-	golang.org/x/sync v0.0.0-20220722155255-886fb9371eb4 // indirect
+	golang.org/x/sync v0.1.0 // indirect
 	golang.org/x/sys v0.17.0 // indirect
 	golang.org/x/text v0.14.0 // indirect
 	google.golang.org/protobuf v1.32.0 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
 )
 
-replace github.com/codylund/streamflows-server/auth => ./auth
-
 replace github.com/codylund/streamflows-server/db => ./db
 
-replace github.com/codylund/streamflows-server/domain => ./domain
+replace github.com/codylund/streamflows-server/sites => ./sites
 
-replace github.com/codylund/streamflows-server/handler => ./handler
+replace github.com/codylund/streamflows-server/user => ./user
 
-replace github.com/codylund/streamflows-server/middleware => ./middleware
+replace github.com/codylund/streamflows-server/util => ./util
