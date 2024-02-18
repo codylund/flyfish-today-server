@@ -1,4 +1,4 @@
-FROM golang:1.22-alpine AS builder
+FROM golang:alpine AS builder
 
 # Set destination for COPY
 WORKDIR /app
@@ -11,13 +11,17 @@ COPY ./src ./
 RUN go mod download
 RUN go build -o /go/bin/server
 
-# Serve the 'build' directory on port 4200 using 'serve'
-CMD ["go", "run", "."]
+# Download latest CA certs
+RUN apk update && apk upgrade && apk add --no-cache ca-certificates
+RUN update-ca-certificates
 
-FROM alpine
+FROM scratch
 
 # Copy the binary.
 COPY --from=builder /go/bin/server /go/bin/server
+
+# Copy CA certs.
+COPY --from=builder /etc/ssl/certs/ca-certificates.crt /etc/ssl/certs/
 
 # Run the hello binary.
 ENTRYPOINT ["/go/bin/server"]
