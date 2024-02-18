@@ -1,4 +1,4 @@
-FROM amd64/golang
+FROM amd64/golang:1.22-alpine
 
 # Set destination for COPY
 WORKDIR /app
