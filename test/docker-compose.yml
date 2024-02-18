@@ -4,7 +4,7 @@ version: '3.1'
 services:
   # Local server instance
   server:
-    image: golang
+    image: golang:1.22-alpine
     restart: always
     working_dir: /server
     ports:
