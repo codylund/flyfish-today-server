@@ -14,7 +14,7 @@ RUN go build -o /go/bin/server
 # Serve the 'build' directory on port 4200 using 'serve'
 CMD ["go", "run", "."]
 
-FROM scratch
+FROM alpine
 
 # Copy the binary.
 COPY --from=builder /go/bin/server /go/bin/server
