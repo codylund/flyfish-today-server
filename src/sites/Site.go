@@ -9,7 +9,7 @@ type Site struct {
 	UserID     primitive.ObjectID `json:"-"           bson:"user_id"`
 	SiteID     string             `json:"site_id"     bson:"site_id"`
 	IsFavorite bool               `json:"is_favorite" bson:"is_favorite"`
-	Tags       []string           `json:"tags"        bson:"tags"`
+	Tags       Tags               `json:"tags"        bson:"tags"`
 }
 
 type SiteUpdate struct {
