@@ -20,7 +20,7 @@ func GetUser(c *gin.Context) (User, error) {
 	}
 
 	if user.Username == "" || user.Password == "" {
-		return user, errors.New("Invalid user input.")
+		return user, errors.New("invalid user input")
 	}
 
 	return user, err

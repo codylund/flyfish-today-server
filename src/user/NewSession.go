@@ -2,6 +2,7 @@ package user
 
 import (
 	"context"
+	"log"
 	"net/http"
 	"os"
 
@@ -24,5 +25,7 @@ func NewSession(c *gin.Context, db *mongo.Database, userID primitive.ObjectID) e
 	// Return secure cookie for the session.
 	c.SetSameSite(http.SameSiteNoneMode)
 	c.SetCookie("session", sessionID, 5*24*60*60, "/", os.Getenv("DOMAIN"), true, true)
+	log.Printf("Cookie: %s = %s", "session", sessionID)
+	log.Printf("Domain: %s", os.Getenv("DOMAIN"))
 	return nil
 }

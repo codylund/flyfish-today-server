@@ -31,6 +31,6 @@ func SignOut(c *gin.Context) {
 	})
 
 	// Clear out the cookie.
-	c.SetCookie("session_id", "", -1, "/", os.Getenv("DOMAIN"), true, true)
+	c.SetCookie("session", "", -1, "/", os.Getenv("DOMAIN"), true, true)
 	c.Status(http.StatusOK)
 }

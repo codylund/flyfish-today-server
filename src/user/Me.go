@@ -17,7 +17,7 @@ func Me(c *gin.Context) {
 	// This is set by middleware.Sessions.
 	userID, exists := c.Get("user_id")
 	if !exists {
-		util.Error(c, http.StatusInternalServerError, errors.New("Context missing user id."))
+		util.Error(c, http.StatusInternalServerError, errors.New("context missing user id"))
 		return
 	}
 
